@@ -1,0 +1,19 @@
+Reading cached build data
+>> Local Products Rules ..... started
+>> Local Products Rules ..... done
+>> Creating project symlinks
+>> Entering Package HadronOuter/HO
+>> Building shared library tmp/slc6_amd64_gcc481/src/HadronOuter/HO/src/HadronOuterHO/libHadronOuterHO.so
+tmp/slc6_amd64_gcc481/src/HadronOuter/HO/src/HadronOuterHO/HOCollector.o: In function `L1ITMu::HOCollector::HOCollector(edm::ParameterSet const&)':
+HOCollector.cc:(.text+0x5): undefined reference to `L1ITMu::SubsystemCollector::SubsystemCollector(edm::ParameterSet const&)'
+tmp/slc6_amd64_gcc481/src/HadronOuter/HO/src/HadronOuterHO/HOCollector.o: In function `L1ITMu::HOCollector::extractPrimitives(edm::Event const&, edm::EventSetup const&, std::vector<L1ITMu::TriggerPrimitive, std::allocator<L1ITMu::TriggerPrimitive> >&) const':
+HOCollector.cc:(.text+0x284): undefined reference to `L1ITMu::TriggerPrimitive::TriggerPrimitive(L1ITMu::TriggerPrimitive const&)'
+HOCollector.cc:(.text+0x2fe): undefined reference to `L1ITMu::TriggerPrimitive::TriggerPrimitive(HOId const&, int, unsigned int, unsigned int, int, double, double, unsigned int)'
+tmp/slc6_amd64_gcc481/src/HadronOuter/HO/src/HadronOuterHO/HOCollector.o: In function `void std::vector<L1ITMu::TriggerPrimitive, std::allocator<L1ITMu::TriggerPrimitive> >::_M_emplace_back_aux<L1ITMu::TriggerPrimitive>(L1ITMu::TriggerPrimitive&&)':
+HOCollector.cc:(.text._ZNSt6vectorIN6L1ITMu16TriggerPrimitiveESaIS1_EE19_M_emplace_back_auxIJS1_EEEvDpOT_[_ZNSt6vectorIN6L1ITMu16TriggerPrimitiveESaIS1_EE19_M_emplace_back_auxIJS1_EEEvDpOT_]+0x7e): undefined reference to `L1ITMu::TriggerPrimitive::TriggerPrimitive(L1ITMu::TriggerPrimitive const&)'
+HOCollector.cc:(.text._ZNSt6vectorIN6L1ITMu16TriggerPrimitiveESaIS1_EE19_M_emplace_back_auxIJS1_EEEvDpOT_[_ZNSt6vectorIN6L1ITMu16TriggerPrimitiveESaIS1_EE19_M_emplace_back_auxIJS1_EEEvDpOT_]+0xa4): undefined reference to `L1ITMu::TriggerPrimitive::TriggerPrimitive(L1ITMu::TriggerPrimitive const&)'
+tmp/slc6_amd64_gcc481/src/HadronOuter/HO/src/HadronOuterHO/HOCollector.o: In function `_GLOBAL__sub_I_HOCollector.cc':
+HOCollector.cc:(.text.startup+0x68): undefined reference to `edmplugin::PluginFactory<L1ITMu::SubsystemCollector* (edm::ParameterSet const&)>::get()'
+collect2: error: ld returned 1 exit status
+gmake: *** [tmp/slc6_amd64_gcc481/src/HadronOuter/HO/src/HadronOuterHO/libHadronOuterHO.so] Error 1
+gmake: *** [There are compilation/build errors. Please see the detail log above.] Error 2
