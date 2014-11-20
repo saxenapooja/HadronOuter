@@ -8,8 +8,15 @@
  */
 
 #include <DataFormats/DetId/interface/DetId.h>
+
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Utilities/interface/InputTag.h"
+
 #include <iosfwd>
 
+namespace edm {
+  class Event;
+}
 
 //class
 class HOId : public DetId {
@@ -17,7 +24,9 @@ class HOId : public DetId {
  private:
   int ieta_;
   int iphi_;
-  
+  int bunchcrossing_;  
+  double Emin_, Emax_;
+
  public:
   /// Default constructor. 
   /// Fills the common part in the base and leaves 0 in all other fields
@@ -25,35 +34,30 @@ class HOId : public DetId {
   
 
   /// Construct from a packed id. It is required that the packed id represents 
-  ///valid HO DetId (proper Detector & SubDet fields), otherwise an exception is thrown.
+  /// valid HO DetId (proper Detector & SubDet fields), otherwise an exception is thrown.
   HOId(uint32_t id);
   HOId(DetId id);
-
-  
-  /* struct tileID { */
-  /*   int eta; */
-  /*   int phi; */
-  /* }; */
-  
 
   /// Construct from fully qualified identifier.
   HOId(int ieta_, int iphi_);
 
   signed eta() const;
   unsigned phi() const;
-  int ring()   const;
+  int wheel()   const;
   int sector() const;
   int trayId() const;
   int tileId() const;
-  unsigned bx() const;
+  int bx(const edm::Event& iEvent);
+  double Emin() const;
+  double Emax() const;
   
   static const int maxEta = 15;
   static const int minEta = -15;
   static const int maxPhi = 72;
   static const int minPhi = 1;
   
-  static const int minSectorId =     1; //0 for DT
-  static const int maxSectorId =    12; // 14 for DT
+  static const int minSectorId =     0; // 0 for DT
+  static const int maxSectorId =    11; // 14 for DT
   static const int minWheelId  =    -2;
   static const int maxWheelId  =     2;
   static const int maxTraysID  =     6;
@@ -63,11 +67,10 @@ class HOId : public DetId {
 
  protected:
   // Perform a consistency check of the id with a HO Id
-  // It thorows an exception if this is not the case
+  // It throws an exception if this is not the case
   void checkHOId();
 };
 
-
-//std::ostream& operator<<( std::ostream& os, const HOId& id );
+std::ostream& operator<<( std::ostream& os, const HOId& id );
 #endif
 
