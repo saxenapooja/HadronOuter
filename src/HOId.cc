@@ -1,7 +1,7 @@
 /** \file
  *  See header file for a description of this class.
  *
- *  \author G. Cerminara - Pooja Saxena
+ *  \autor Pooja Saxena
  */
 
 #include "HadronOuter/HO/interface/HOId.h"
@@ -53,10 +53,10 @@ void HOId::checkHOId() {
 }
 
 
-int HOId::bx(const edm::Event& iEvent) {
-  bunchcrossing_ = iEvent.eventAuxiliary().bunchCrossing();
-  return bunchcrossing_;
-}
+// int HOId::bx(const edm::Event& iEvent) {
+//   bunchcrossing_ = iEvent.eventAuxiliary().bunchCrossing();
+//   return bunchcrossing_;
+// }
 
 unsigned HOId::phi() const{
   return iphi_;
