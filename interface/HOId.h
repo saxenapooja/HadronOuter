@@ -47,7 +47,7 @@ class HOId : public DetId {
   int sector() const;
   int trayId() const;
   int tileId() const;
-  int bx(const edm::Event& iEvent);
+  //  int bx(const edm::Event& iEvent);
   double Emin() const;
   double Emax() const;
   
