@@ -11,20 +11,15 @@
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
-
+#include "DataFormats/HcalDetId/interface/HcalDetId.h"
 #include <iosfwd>
 
-namespace edm {
-  class Event;
-}
-
 //class
-class HOId : public DetId {
+class HOId : public HcalDetId {
   
  private:
-  int ieta_;
-  int iphi_;
-  int bunchcrossing_;  
+  int ieta_  ;
+  int iphi_  ;
   double Emin_, Emax_;
 
  public:
@@ -32,22 +27,20 @@ class HOId : public DetId {
   /// Fills the common part in the base and leaves 0 in all other fields
   HOId();
   
-
-  /// Construct from a packed id. It is required that the packed id represents 
+  /// Construct from a packed id. It is required that the packed id represents
   /// valid HO DetId (proper Detector & SubDet fields), otherwise an exception is thrown.
   HOId(uint32_t id);
-  HOId(DetId id);
-
+  HOId(HcalDetId id);
+  
   /// Construct from fully qualified identifier.
-  HOId(int ieta_, int iphi_);
+  //  HOId(int tower_ieta, int tower_iphi);
+  HOId(HcalDetId det, int tower_ieta, int tower_iphi);
+  HOId(DetId id);
 
   signed eta() const;
   unsigned phi() const;
   int wheel()   const;
   int sector() const;
-  int trayId() const;
-  int tileId() const;
-  //  int bx(const edm::Event& iEvent);
   double Emin() const;
   double Emax() const;
   
@@ -69,6 +62,7 @@ class HOId : public DetId {
   // Perform a consistency check of the id with a HO Id
   // It throws an exception if this is not the case
   void checkHOId();
+  void checkId(HcalDetId det);
 };
 
 std::ostream& operator<<( std::ostream& os, const HOId& id );
