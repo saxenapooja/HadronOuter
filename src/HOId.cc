@@ -15,24 +15,31 @@
 using namespace std;
 using namespace edm;
 
-HOId::HOId() : DetId(DetId::Hcal, HcalSubdetector::HcalOuter){}
+HOId::HOId() : HcalDetId(DetId::Hcal) {} //, HcalSubdetector::HcalOuter){}
 
 
-HOId::HOId(uint32_t id) {
-  checkHOId();               // Check this is a valid id for HO
+HOId::HOId(uint32_t id) : HcalDetId(DetId::Hcal) {
+  
+  checkHOId();          
 }
 
-HOId::HOId(DetId id) {
-  checkHOId();               // Check this is a valid id for HO
+HOId::HOId(HcalDetId id) {
+  checkHOId();          
 }
 
 
-HOId::HOId(int ieta, int iphi): ieta_(ieta), iphi_(iphi) {
-  checkHOId();
+HOId::HOId(DetId id) : HcalDetId(DetId::Hcal) {
+  checkHOId();      
+}
 
+
+HOId::HOId(HcalDetId det, int ieta, int iphi): ieta_(ieta), iphi_(iphi) {
+  //  checkHOId();
+  checkId(det);
+  
   // Check that arguments are within the range
-  if (ieta      < maxEta     || ieta   > minEta ||
-      iphi      < maxPhi     || iphi   > maxPhi) {
+  if (ieta      > maxEta     || ieta   < minEta ||
+      iphi      > maxPhi     || iphi   < minPhi) {
     throw cms::Exception("InvalidDetId") << "HOId ctor:" 
 					 << " Invalid parameters: " 
 					 << " ieta:"<< ieta
@@ -42,21 +49,26 @@ HOId::HOId(int ieta, int iphi): ieta_(ieta), iphi_(iphi) {
 }
 
 
-
-void HOId::checkHOId() {
-  if (det()!=DetId::Hcal || subdetId()!=HcalSubdetector::HcalOuter) {
+void HOId::checkId(HcalDetId det) {
+  if (det.subdet() !=3 || det.depth()!=4) {
     throw cms::Exception("InvalidDetId") << "HOId ctor:"
-					 << " det: " << det()
-					 << " subdet: " << subdetId()
-					 << " is not a valid HO id";  
+                                         << " det: "    << det()
+					 << " subdet: " <<  det.subdet()
+					 << " depth: "  <<  det.depth()
+                                         << " is not a valid HO id";
   }
 }
 
 
-// int HOId::bx(const edm::Event& iEvent) {
-//   bunchcrossing_ = iEvent.eventAuxiliary().bunchCrossing();
-//   return bunchcrossing_;
-// }
+void HOId::checkHOId() {
+  if (det()!=DetId::Hcal || subdetId()!=HcalSubdetector::HcalOuter) {
+    throw cms::Exception("InvalidDetId") << "This HOId :"
+					 << " det: " << det()
+					 << " subdet: " << subdetId()
+					 << " is not a valid HO id.";  
+  }
+}
+
 
 unsigned HOId::phi() const{
   return iphi_;
@@ -78,6 +90,7 @@ double HOId::Emax() const{
 
 
 int HOId::wheel() const {
+  //  std::cout<<"ieta_ is :"<< ieta_ << std::endl;
   int ring_ = 0;
   if(ieta_ < -10)
     ring_ = -2;
@@ -96,11 +109,11 @@ int HOId::wheel() const {
 
 
 int HOId::sector() const {
-  int sector_ = 0;  //started it from: 0-12 as DT has the same local definition
-  if (iphi_ > 71 && iphi_ < 5  ) sector_ =0;
+  int sector_ = -99;  //started it from: 0-12 as DT has the same local definition
+  if (iphi_ < 5  ) sector_ = 0;
   else  if (iphi_ > 4  && iphi_ < 11 ) sector_ =1;
-  else if (iphi_ > 10 && iphi_ < 17 ) sector_ =2;
-  else if (iphi_ > 16 && iphi_ < 23 ) sector_ =3;
+  else if (iphi_ > 10 && iphi_ < 17 )  sector_ =2;
+  else if (iphi_ > 16 && iphi_ < 23 ) sector_ =3; 
   else if (iphi_ > 22 && iphi_ < 29 ) sector_ =4;
   else if (iphi_ > 28 && iphi_ < 35 ) sector_ =5;
   else if (iphi_ > 34 && iphi_ < 41 ) sector_ =6;
@@ -115,32 +128,31 @@ int HOId::sector() const {
 }
 
 
-int HOId::trayId() const {
-  int trayId_ = -1;
+// int HOId::trayId() const {
+//   int trayId_ = -1;
 
-  if (iphi_%6 == 5 ) trayId_ = 0; //loweset tray
-  else if (iphi_%6 == 0 ) trayId_ = 1; //loweset+1
-  else if (iphi_%6 == 1 ) trayId_ = 2; //loweset+2
-  else if (iphi_%6 == 2 ) trayId_ = 3; //loweset+3
-  else if (iphi_%6 == 3 ) trayId_ = 4; //loweset+4
-  else if  (iphi_%6 == 4 ) trayId_ = 5; //loweset+5
+//   if (iphi_%6 == 5 ) trayId_ = 0; //loweset tray
+//   else if (iphi_%6 == 0 ) trayId_ = 1; //loweset+1
+//   else if (iphi_%6 == 1 ) trayId_ = 2; //loweset+2
+//   else if (iphi_%6 == 2 ) trayId_ = 3; //loweset+3
+//   else if (iphi_%6 == 3 ) trayId_ = 4; //loweset+4
+//   else if  (iphi_%6 == 4 ) trayId_ = 5; //loweset+5
  
-  return trayId_;
-}
+//   return trayId_;
+// }
 
 
-int HOId::tileId() const {
-  int tile = ieta_ * iphi_;
-  return  tile;
-}
+// int HOId::tileId() const {
+//   int tile = ieta_ * iphi_;
+//   return  tile;
+// }
 
 
 std::ostream& operator<<( std::ostream& os, const HOId & id ) {
-  os << " Wheel:"<< id.wheel()
-     << " Sector:"<< id.sector()
+  os << " Wh:"<< id.wheel()
+     << " Se:"<< id.sector()
      << " eta:"<< id.eta()
      << " phi:"<< id.phi(); 
-  
   return os;
 }
 
